@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from "next/link";
 
 export default async function WebSearchPage({ searchParams }) {
   const response = await fetch(`
@@ -6,13 +7,26 @@ export default async function WebSearchPage({ searchParams }) {
   `);
 
   const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error('Something went wrong');
+  }
+
   const { items } = data;
-  
-  return <>
-    {items?.map((item, index) => (
-      <div key={index}>
-        <h1>{item.title}</h1>
+
+  if (!items) {
+    return (
+      <div className="flex flex-col justify-center items-center pt-10">
+        <h1 className="text-3xl mb-4">No results found</h1>
+        <p className="text-lg">
+          Try searching for something else or go back to the homepage{" "}
+          <Link href="/" className="text-blue-500">
+            Home
+          </Link>
+        </p>
       </div>
-    ))}
-  </>;
+    );
+  }
+
+  return <> {items?.map((item, index) => <h1 key={index}>{item.title}</h1>)} </>;
 }
