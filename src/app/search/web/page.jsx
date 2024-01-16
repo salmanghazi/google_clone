@@ -1,5 +1,5 @@
-import React from 'react'
 import Link from "next/link";
+import WebSearchResults from "@/components/WebSearchResults";
 
 export default async function WebSearchPage({ searchParams }) {
   const response = await fetch(`
@@ -28,5 +28,5 @@ export default async function WebSearchPage({ searchParams }) {
     );
   }
 
-  return <> {items?.map((item, index) => <h1 key={index}>{item.title}</h1>)} </>;
+  return <> {items && <WebSearchResults results={data}/>} </>;
 }
