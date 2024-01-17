@@ -1,7 +1,32 @@
-import React from 'react'
+import Link from "next/link";
+import ImageSearchResults from "@/components/ImageSearchResults";
 
-export default function page() {
-  return (
-    <div>image page</div>
-  )
+export default async function WebSearchPage({ searchParams }) {
+  const response = await fetch(`
+    https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}&searchType=image
+  `);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error('Something went wrong');
+  }
+
+  const { items } = data;
+
+  if (!items) {
+    return (
+      <div className="flex flex-col justify-center items-center pt-10">
+        <h1 className="text-3xl mb-4">No results found</h1>
+        <p className="text-lg">
+          Try searching for something else or go back to the homepage{" "}
+          <Link href="/" className="text-blue-500">
+            Home
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
+  return <> {items && <ImageSearchResults results={data}/>} </>;
 }

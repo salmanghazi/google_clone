@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 import { RxCross2 } from "react-icons/rx";
 import { BsFillMicFill } from "react-icons/bs";
@@ -10,13 +10,16 @@ import { useState } from "react";
 export default function SearchBox() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
+	const pathname = usePathname();
+
 	const [searchTerm, setSearchTerm] = useState(searchParams.get('searchTerm') || '');
 
 	const onSearch = (e) => {
 		e.preventDefault();
 		
 		if (!searchTerm.trim()) return;
-		router.push(`/search/web?searchTerm=${searchTerm}`);
+		const path = pathname === '/search/web' ? '/search/web' : '/search/image';
+		router.push(`${path}?searchTerm=${searchTerm}`);
 	};
 
 	return (
